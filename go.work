@@ -1,0 +1,7 @@
+go 1.21.4
+
+use .
+
+replace (
+    k8s.io/client-go => /home/colin/workspace/golang/src/k8s.io/client-go
+)
