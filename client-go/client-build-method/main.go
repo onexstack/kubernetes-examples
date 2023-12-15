@@ -10,6 +10,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/restmapper"
+	"k8s.io/client-go/scale"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 )
@@ -31,11 +33,10 @@ func main() {
 	}
 
 	// 创建 DiscoveryClient
-	discoveryClient, err := discovery.NewDiscoveryClientForConfig(config)
+	dc, err := discovery.NewDiscoveryClientForConfig(config)
 	if err != nil {
 		panic(err)
 	}
-	_ = discoveryClient
 
 	// 创建 DynamicClient
 	dynamicClient, err := dynamic.NewForConfig(config)
@@ -50,6 +51,19 @@ func main() {
 		panic(err)
 	}
 	_ = clientset
+
+	// 创建 ScaleClient
+	gr, err := restmapper.GetAPIGroupResources(dc)
+	if err != nil {
+		panic(err)
+	}
+	mapper := restmapper.NewDiscoveryRESTMapper(gr)
+	resolver := scale.NewDiscoveryScaleKindResolver(dc)
+	scaleClient, err := scale.NewForConfig(config, mapper, dynamic.LegacyAPIPathResolverFunc, resolver)
+	if err != nil {
+		panic(err)
+	}
+	_ = scaleClient
 
 	// 创建 RESTClient
 	// 注意：创建 RESTClient时，要对 *restclient.Config 进行必要的设置

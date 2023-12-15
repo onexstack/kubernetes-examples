@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	apiv1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -57,12 +57,10 @@ func main() {
 		},
 	}
 	result, err := client.Resource(gvr).
-		Namespace(apiv1.NamespaceDefault).
+		Namespace(corev1.NamespaceDefault).
 		Create(context.TODO(), obj, metav1.CreateOptions{})
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("Created pod %q.\n", result.GetName())
-
-	// 现在可以使用client-go库将此对象创建到Kubernetes集群中
 }
