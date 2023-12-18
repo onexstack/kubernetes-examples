@@ -33,18 +33,18 @@ func main() {
 		panic(err.Error())
 	}
 
-	client, err := kubernetes.NewForConfig(config)
+	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
 	}
 
 	// Create one object before initializing the informer.
-	first := createConfigMap(client)
+	first := createConfigMap(clientset)
 
 	// Create a shared informer factory.
 	//   - A factory is essentially a struct keeping a map (type -> informer).
 	//   - 5*time.Second is a default resync period (for all informers).
-	factory := informers.NewSharedInformerFactory(client, 5*time.Second)
+	factory := informers.NewSharedInformerFactory(clientset, 5*time.Second)
 
 	// When informer is requested, the factory instantiates it and keeps the
 	// the reference to it in the internal map before returning.
@@ -91,7 +91,7 @@ func main() {
 	}
 
 	// Search for the existing ConfigMap object using the label selector.
-	selector, err := labels.Parse("example==" + label)
+	selector, err := labels.Parse("example=" + label)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -104,30 +104,26 @@ func main() {
 	}
 
 	// Create another object while watching.
-	second := createConfigMap(client)
+	second := createConfigMap(clientset)
 
 	// Delete config maps created by this test.
-	deleteConfigMap(client, first)
-	deleteConfigMap(client, second)
+	deleteConfigMap(clientset, first)
+	deleteConfigMap(clientset, second)
 
 	// Stay for a couple more seconds to observe resyncs.
 	time.Sleep(10 * time.Second)
 }
 
-func createConfigMap(client kubernetes.Interface) *corev1.ConfigMap {
+func createConfigMap(clientset kubernetes.Interface) *corev1.ConfigMap {
 	cm := &corev1.ConfigMap{Data: map[string]string{"foo": "bar"}}
 	cm.Namespace = namespace
 	cm.GenerateName = "informer-typed-simple-"
 	cm.SetLabels(map[string]string{"example": label})
 
-	cm, err := client.
+	cm, err := clientset.
 		CoreV1().
 		ConfigMaps(namespace).
-		Create(
-			context.Background(),
-			cm,
-			metav1.CreateOptions{},
-		)
+		Create(context.Background(), cm, metav1.CreateOptions{})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -136,15 +132,11 @@ func createConfigMap(client kubernetes.Interface) *corev1.ConfigMap {
 	return cm
 }
 
-func deleteConfigMap(client kubernetes.Interface, cm *corev1.ConfigMap) {
-	err := client.
+func deleteConfigMap(clientset kubernetes.Interface, cm *corev1.ConfigMap) {
+	err := clientset.
 		CoreV1().
 		ConfigMaps(cm.GetNamespace()).
-		Delete(
-			context.Background(),
-			cm.GetName(),
-			metav1.DeleteOptions{},
-		)
+		Delete(context.Background(), cm.GetName(), metav1.DeleteOptions{})
 	if err != nil {
 		panic(err.Error())
 	}
