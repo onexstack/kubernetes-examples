@@ -1,0 +1,27 @@
+# permissions for end users to edit sums.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: using-kubebuilder
+    app.kubernetes.io/managed-by: kustomize
+  name: sum-editor-role
+rules:
+- apiGroups:
+  - calculator.superproj.com
+  resources:
+  - sums
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - calculator.superproj.com
+  resources:
+  - sums/status
+  verbs:
+  - get

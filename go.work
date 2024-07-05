@@ -1,7 +1,6 @@
-go 1.21.4
+go 1.22.2
 
-use .
-
-replace (
-    k8s.io/client-go => /home/colin/workspace/golang/src/k8s.io/client-go
+use (
+	.
+	./webhook/using-kubebuilder
 )

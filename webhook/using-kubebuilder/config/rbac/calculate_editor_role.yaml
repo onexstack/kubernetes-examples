@@ -1,0 +1,27 @@
+# permissions for end users to edit calculates.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: using-kubebuilder
+    app.kubernetes.io/managed-by: kustomize
+  name: calculate-editor-role
+rules:
+- apiGroups:
+  - math.superproj.com
+  resources:
+  - calculates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - math.superproj.com
+  resources:
+  - calculates/status
+  verbs:
+  - get

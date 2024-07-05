@@ -1,0 +1,34 @@
+apiVersion: admissionregistration.k8s.io/v1
+# 声明这个资源的类型是 MutatingWebhookConfiguration，表示这是一个变更 webhook 配置
+kind: MutatingWebhookConfiguration 
+metadata:
+  name: test-mutating-webhook
+# Webhook 列表，可以包含多个 Webhook 配置
+webhooks: 
+  - name: test-mutating-webhook.example.com
+    # 配置与 webhook 服务器的通信信息
+    clientConfig: 
+      # CA 证书的 Base64 编码
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURDVENDQWZHZ0F3SUJBZ0lVUm9BZTBZTkt5dWxGZG5IRjdqMnlwdWxLRVlrd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0ZERVNNQkFHQTFVRUF3d0pjM1Z3WlhKd2NtOXFNQjRYRFRJME1EY3dNekUxTXpNd05sb1hEVE0wTURjdwpNVEUxTXpNd05sb3dGREVTTUJBR0ExVUVBd3dKYzNWd1pYSndjbTlxTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGCkFBT0NBUThBTUlJQkNnS0NBUUVBeklManRRSkovY2xWVlBjV05YR1l4Wk5tS1JKRHVjVmVOZEhHemJiMmtIRmYKNXlGMDNqMWZnV3o2ZDZ6MVE5MzQ1NHk3dW5KcUVBejJ4V0ZPM0F0WElNOXhMN0JHb3dUZTVXU0RDUHZsL0JySQpHcGVjbEp3QS80UWlEc2RLZDY2RzU4Rk1FYmZUTVF3Ny92V0NEU3B4RmVVbUtCa3RyMWJEc0xoWnVpbzBDcml5CjlTUGpFUU81WUQvS1liVWxpREd2UDFyRmVsa1o0Q1h5MWYwcGVONVFGM2FXNTNxekErQ05QY0ZLaHV1VU1TSkwKdlcvVEtweEVCZDdqUFg3T1JwcE8wa2t2eGN4ZHpaVXp1cXpSK29yRWdNdTkxMlNFQUs3NFdtT1BaZktBUC9oUAo4eEp1R01jSU1hTmtIVTRKcWVDVFEzVnYzeEFUd0VOYXpRZXdJVjVrQndJREFRQUJvMU13VVRBZEJnTlZIUTRFCkZnUVVHeXgxUThIa01TOUxtU2toVHVwa0lwblJVOVV3SHdZRFZSMGpCQmd3Rm9BVUd5eDFROEhrTVM5TG1Ta2gKVHVwa0lwblJVOVV3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBRVptegp1SzRkVkRGelFuUFdPQWQzakZ2anNzSTZRMGE4MlQvRFhVYTRtWnNKeDRpdGJzN09lR1NBSXR4MjRTdG9OYWV2CnFwcWgxY3F6OG9SdzF0K2hJeSsxTTR3YkxwVEx2dzlIa3FYdlRCVFE5ZTBxd3E1cWZHd2hmRm9IYlNiY0JleFcKdS9qd1IxNkpiS01yT0dDQ3hsQk1VWU54WEdvK1VPVHFJaWF4RGtnZUxBRE50WWpLZENZSUZBaVdqZ0ZFTS9pQgpPaUtsMHRRVEZPODB6bFFPU3MwVExrOGdiUytNZTJoM081bW5ZeUo1b3Y0dnRpczlwZjJLTHNpdkV1NWJXMnJNCjVzc0hJbHhxb0NyYUp5N2ZFYTBkSHJORXlZWFdIcUFYSlZ6bWs1NnhLa1Ayc0d0WXRDdHZsR1N6c0J2c1FwZjQKczdpMm5yZFRrektxMHgzQW13PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+      # 指定 Webhook 服务的 URL。当匹配到触发规则时，Kubernetes API 服务器会将请求发送到这个 URL。
+      # 此 URL 必须是 HTTPS 的，并且需要与 webhook 服务的证书匹配
+      url: https://10.37.83.200:9999/mutate # 注意是 https
+    # 定义 Webhook 适用的匹配规则
+    rules: 
+      # API 组列表，空字符串表示核心 API 组
+      - apiGroups: [""] 
+        # API 版本列表，此处指定为 v1
+        apiVersions: ["v1"] 
+        # 操作类型列表，此处指定为 CREATE，意味着只在资源创建时触发这个 Webhook
+        operations: ["CREATE"] 
+        # 资源列表，此处指定为 pods，意味着只对 Pod 资源进行操作
+        resources: ["pods"] 
+    # 指定 Webhook 失败时的行为。Fail 表示如果 Webhook 请求失败，相关的资源操作也将失败。
+    # 另一可能的值是 Ignore，表示即使 Webhook 请求失败，资源操作依然继续
+    failurePolicy: Fail 
+    # 描述此 Webhook 是否有副作用。None 表示此 Webhook 没有副作用，
+    # 具体定义 Webhook 操作对资源状态和外部系统的影
+    sideEffects: None 
+    # 此 Webhook 支持的 AdmissionReview 版本。指定客户端（Kubernetes API Server）
+    # 如何与 Webhook 进行交互兼容。在这个例子中，支持 v1 和 v1beta1 版本
+    admissionReviewVersions: ["v1", "v1beta1"] 

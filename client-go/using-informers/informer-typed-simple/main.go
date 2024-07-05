@@ -48,8 +48,8 @@ func main() {
 
 	// When informer is requested, the factory instantiates it and keeps the
 	// the reference to it in the internal map before returning.
-	cmInformer := factory.Core().V1().ConfigMaps()
-	cmInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+	cmInformer := factory.Core().V1().ConfigMaps().Informer()
+	cmInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			cm := obj.(*corev1.ConfigMap)
 			fmt.Printf("Informer event: ConfigMap ADDED %s/%s\n", cm.GetNamespace(), cm.GetName())

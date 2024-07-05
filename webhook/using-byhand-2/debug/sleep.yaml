@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sleep
+  annotations:
+    admission-webhook-example.qikqiak.com/mutate: "true"
+spec:
+  selector:
+    matchLabels:
+      app: sleep
+  template:
+    metadata:
+      labels:
+        app: sleep
+    spec:
+      containers:
+      - name: sleep
+        image: busybox
+        command: ["/bin/sleep","infinity"]
+        imagePullPolicy: IfNotPresent

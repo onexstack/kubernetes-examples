@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- calculator_v1_sum.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

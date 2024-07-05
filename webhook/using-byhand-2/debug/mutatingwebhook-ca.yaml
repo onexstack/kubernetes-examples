@@ -1,0 +1,27 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: mutating-webhook-example-cfg-debug
+  labels:
+    app: admission-webhook-example-debug
+webhooks:
+  - name: mutating-example.qikqiak.com.debug
+    clientConfig:
+      service:
+        name: admission-webhook-example-svc-debug
+        namespace: default
+        path: "/mutate"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeE1EZ3lPVEEyTkRjek1Gb1hEVE14TURneU56QTJORGN6TUZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTUdFCnAyNytYcjJ3Rnc5amJKbjhrVUtMdk1vYjR0U0lFSVJZN1lWVkFaZ2d1NS9WSmZZMFlEZng1T0czTTNiTlpmSTgKdDFPbk5HN0pYNHJYTDhEMSs1cFZkbU9PeTZrbXphOWk1cjNKVUJXYUNMUEpaUGc2NElpU25nVFJEMFAzOHFNYQpFWUJFU2pMYzZlaEpaK1Q2Kzdvc0NvNUtxajZwRUFjTUpEcG5DOU9OR2NFWTFzRmFnanlSVGV2UkFKaU1ZaEVpClBodU9TQms4RGVIbTNFTDVYdUUwZFdQNEZoK1NLYnNDZlJVa1liRnN2dDRoOWJGdkh0TmZ2bmNtWks5U0tQRWEKYjlUdHNNdU9ac1R5TkhyTFlETUZGaFBFbGNPdmgvVG9PRFhOTS90MVJPZ1JGdTNvNFNuY25pdGovaTVTZmhhWAptK0R6VThvdjJsS005bXM3VnNjQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZDRzYvb0YxVXdtN2pGcFBtcnpvQTVMbE4vWWhNQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFCeG9uK3lWYW1NaXV2blZsZUlmVGpRYWord3lnMkNDYjFCSm1ZSURWa2NlVTNldU4xawpOVEZpWUZsUHEyOE84cUt4YzIvOEFDVXlGZFlzVEtqNWt4bDFRMzlQQnArTDlRYjdvZW96SW1KZHZPWVNjdFFPClcwZVRvNTBmek1VdmVCOXBWVlYvUnM5ZWo0VnM1V1ZvSk9kZmtXdWp3elJNNnFFV2NTdVVpYUtoZm8xbXE5QUUKNHIzek5SdzBFd3pYRUFyeUNVV3ZkL3VVaDRvS0VXWitBb3hGSi9tRjUzcFBQQzJEcGlXVldhd1pMaHFEeCtMYwpYUWNWd0FwWTNjUlVlTW0yL1FiWUtoL3M4a01tTS81amxSbytvYmJEVUR3V3lCR0lSVEcvSVEzOE9XRWMxSHJkCkc1bXE3emZnbnAzZDZIa0dRZkNVOVFVMmhESjQ5UUhIZXhoZgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: ["apps", ""]
+        apiVersions: ["v1"]
+        resources: ["deployments"]
+      - operations: [ "CREATE","DELETE","UPDATE" ]
+        apiGroups: ["stable.example.com", ""]
+        apiVersions: ["v1"]
+        resources: ["qoss"]
+    namespaceSelector:
+      matchLabels:
+        admission-webhook-example: enabled
+

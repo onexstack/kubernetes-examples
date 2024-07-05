@@ -1,0 +1,7 @@
+apiVersion: "stable.example.com/v1"
+kind: QoS
+metadata:
+  name: qos-default-policy
+spec:
+  cpu: 100
+  memory: 100

@@ -1,0 +1,10 @@
+apiVersion: calculator.superproj.com/v1
+kind: Sum
+metadata:
+  labels:
+    app.kubernetes.io/name: using-kubebuilder
+    app.kubernetes.io/managed-by: kustomize
+  name: sum-sample
+spec:
+  first: 1
+  second: 2
