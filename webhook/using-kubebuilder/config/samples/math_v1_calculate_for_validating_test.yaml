@@ -1,0 +1,11 @@
+apiVersion: math.superproj.com/v1
+kind: Calculate
+metadata:
+  labels:
+    app.kubernetes.io/name: using-kubebuilder
+    app.kubernetes.io/managed-by: kustomize
+  name: calculate-sample
+spec:
+  action: div
+  first: 1
+  second: 0
