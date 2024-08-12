@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
-    app.kubernetes.io/name: using-kubebuilder
+    app.kubernetes.io/name: webhook-with-kubebuilder
     app.kubernetes.io/managed-by: kustomize
   name: system
 ---
@@ -14,7 +14,7 @@ metadata:
   namespace: system
   labels:
     control-plane: controller-manager
-    app.kubernetes.io/name: using-kubebuilder
+    app.kubernetes.io/name: webhook-with-kubebuilder
     app.kubernetes.io/managed-by: kustomize
 spec:
   selector:

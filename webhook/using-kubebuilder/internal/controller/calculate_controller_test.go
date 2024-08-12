@@ -27,7 +27,7 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	mathv1 "github.com/superproj/k8sdemo/webhook/using-kubebuilder/api/v1"
+	mathv1 "github.com/superproj/webhook-with-kubebuilder/api/v1"
 )
 
 var _ = Describe("Calculate Controller", func() {

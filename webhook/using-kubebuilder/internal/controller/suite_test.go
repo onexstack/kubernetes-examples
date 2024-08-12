@@ -32,7 +32,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	mathv1 "github.com/superproj/k8sdemo/webhook/using-kubebuilder/api/v1"
+	mathv1 "github.com/superproj/webhook-with-kubebuilder/api/v1"
 	// +kubebuilder:scaffold:imports
 )
 

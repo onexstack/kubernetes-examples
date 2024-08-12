@@ -5,8 +5,8 @@
 domain: superproj.com
 layout:
 - go.kubebuilder.io/v4
-projectName: using-kubebuilder
-repo: github.com/superproj/k8sdemo/webhook/using-kubebuilder
+projectName: webhook-with-kubebuilder
+repo: github.com/superproj/webhook-with-kubebuilder
 resources:
 - api:
     crdVersion: v1
@@ -15,6 +15,10 @@ resources:
   domain: superproj.com
   group: math
   kind: Calculate
-  path: github.com/superproj/k8sdemo/webhook/using-kubebuilder/api/v1
+  path: github.com/superproj/webhook-with-kubebuilder/api/v1
   version: v1
+  webhooks:
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 version: "3"

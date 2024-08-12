@@ -27,6 +27,6 @@ import (
 // Run e2e tests using the Ginkgo runner.
 func TestE2E(t *testing.T) {
 	RegisterFailHandler(Fail)
-	fmt.Fprintf(GinkgoWriter, "Starting using-kubebuilder suite\n")
+	fmt.Fprintf(GinkgoWriter, "Starting webhook-with-kubebuilder suite\n")
 	RunSpecs(t, "e2e suite")
 }

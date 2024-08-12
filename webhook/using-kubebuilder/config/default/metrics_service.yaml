@@ -3,15 +3,15 @@ kind: Service
 metadata:
   labels:
     control-plane: controller-manager
-    app.kubernetes.io/name: using-kubebuilder
+    app.kubernetes.io/name: webhook-with-kubebuilder
     app.kubernetes.io/managed-by: kustomize
   name: controller-manager-metrics-service
   namespace: system
 spec:
   ports:
-  - name: http
-    port: 8080
+  - name: https
+    port: 8443
     protocol: TCP
-    targetPort: 8080
+    targetPort: 8443
   selector:
     control-plane: controller-manager
