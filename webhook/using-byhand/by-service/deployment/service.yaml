@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: default
   name: admission-webhook-example-svc
   labels:
     app: admission-webhook-example

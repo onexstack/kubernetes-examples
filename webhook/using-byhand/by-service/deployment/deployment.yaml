@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: default
   name: admission-webhook-example-deployment
   labels:
     app: admission-webhook-example

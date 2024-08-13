@@ -1,6 +1,7 @@
 #!/bin/sh
-set -euo pipefail
+#set -euo pipefail
 
+echo $VERSION
 VERSION=${1#"v"}
 if [ -z "$VERSION" ]; then
     echo "Must specify version!"
