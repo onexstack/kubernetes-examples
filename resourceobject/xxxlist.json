@@ -1,0 +1,78 @@
+{
+  "apiVersion": "example.com/v1/v1",
+  "kind": "XXXList",
+  "metadata": {
+    "resourceVersion": "12345",
+    "selfLink": "/apis/example.com/v1/xxxlists"
+  },
+  "items": [
+    {
+      "apiVersion": "v1",
+      "kind": "XXX",
+      "metadata": {
+        "name": "example-1",
+        "namespace": "default",
+        "uid": "abc123",
+        "creationTimestamp": "2023-10-01T00:00:00Z"
+      },
+      "spec": {
+        "name": "example-1",
+        "description": "This is an example XXX object.",
+        "version": "v1",
+        "enabled": true,
+        "configurations": {
+          "key1": "value1",
+          "key2": "value2"
+        }
+      },
+      "status": {
+        "phase": "Running",
+        "observedGeneration": 1,
+        "conditions": [
+          {
+            "type": "Ready",
+            "status": "True",
+            "lastProbeTime": "2023-10-01T00:00:00Z",
+            "lastTransitionTime": "2023-10-01T00:00:00Z",
+            "reason": "Initialized",
+            "message": "The resource is ready."
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "XXX",
+      "metadata": {
+        "name": "example-2",
+        "namespace": "default",
+        "uid": "xyz456",
+        "creationTimestamp": "2023-10-02T00:00:00Z"
+      },
+      "spec": {
+        "name": "example-2",
+        "description": "This is another example XXX object.",
+        "version": "v1",
+        "enabled": false,
+        "configurations": {
+          "keyA": "valueA",
+          "keyB": "valueB"
+        }
+      },
+      "status": {
+        "phase": "Failed",
+        "observedGeneration": 1,
+        "conditions": [
+          {
+            "type": "Ready",
+            "status": "False",
+            "lastProbeTime": "2023-10-02T00:00:00Z",
+            "lastTransitionTime": "2023-10-01T00:00:00Z",
+            "reason": "Error",
+            "message": "The resource encountered an error."
+          }
+        ]
+      }
+    }
+  ]
+}

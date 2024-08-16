@@ -1,0 +1,29 @@
+{
+  "apiVersion": "example.com/v1",
+  "kind": "XXX",
+  "metadata": {
+    "resourceVersion": "12345",
+    "name": "example-xxx",
+    "namespace": "default",
+    "uid": "abc123-xyz456",
+    "creationTimestamp": "2023-10-01T00:00:00Z"
+  },
+  "spec": {
+    "displayName": "Example XXX",
+    "description": "This is an example definition of a Kubernetes resource object."
+  },
+  "status": {
+    "phase": "Running",
+    "observedGeneration": 1,
+    "conditions": [
+      {
+        "type": "Ready",
+        "status": "True",
+        "lastProbeTime": "2023-10-01T00:00:00Z",
+        "lastTransitionTime": "2023-10-01T00:00:00Z",
+        "reason": "Initialized",
+        "message": "The resource is ready."
+      }
+    ]
+  }
+}
