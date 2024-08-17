@@ -1,0 +1,20 @@
+apiVersion: apps/v1  
+kind: ReplicaSet  
+metadata:  
+  namespace: default
+  name: my-replicaset  
+spec:  
+  replicas: 2  # 指定要运行的 Pod 数量  
+  selector:  
+    matchLabels:  
+      app: my-app  # 与 Pod 的标签匹配  
+  template:  
+    metadata:  
+      labels:  
+        app: my-app  # Pod 的标签  
+    spec:  
+      containers:  
+      - name: my-container  # 容器名称  
+        image: nginx  # 容器镜像（示例使用 nginx）  
+        ports:  
+        - containerPort: 80  # 容器暴露的端口

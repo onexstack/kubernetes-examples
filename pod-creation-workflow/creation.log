@@ -1,0 +1,37 @@
+# 1. 加载 kubeconfig 文件，该文件指定了连接 kube-apiserver 的证书、访问地址等信息
+I0814 22:40:10.326070 2634693 loader.go:395] Config loaded from file:  /home/colin/.kube/config
+# 2. kubeclt -v =10 会打印请求 kube-apiserve r的 curl 命令，方便你阅读、排障
+I0814 22:40:10.327486 2634693 round_trippers.go:466] curl -v -XGET  -H "Accept: application/json, */*" -H "User-Agent: kubectl/v1.30.1 (linux/amd64) kubernetes/6911225" 'https://10.37.43.62:6443/openapi/v3?timeout=32s'
+I0814 22:40:10.328510 2634693 round_trippers.go:510] HTTP Trace: Dial to tcp:10.37.43.62:6443 succeed
+# 3. kubectl 访问 kube-apiserver 的 GET /openapi/v3 接口。kubectl 访问 GET /openapi/v3 接口主要是为了获取 Kubernetes API 的 OpenAPI 规范。这一规范提供了关于 API 端点、请求和响应格式的结构化信息，帮助 kubectl 了解集群的 API以及如何与之交互。
+I0814 22:40:10.335157 2634693 round_trippers.go:553] GET https://10.37.43.62:6443/openapi/v3?timeout=32s 200 OK in 7 milliseconds
+I0814 22:40:10.335266 2634693 round_trippers.go:570] HTTP Statistics: DNSLookup 0 ms Dial 0 ms TLSHandshake 4 ms ServerProcessing 1 ms Duration 7 ms
+# GET /openapi/v3 接口返回头
+I0814 22:40:10.335282 2634693 round_trippers.go:577] Response Headers:
+I0814 22:40:10.335294 2634693 round_trippers.go:580]     Accept-Ranges: bytes
+I0814 22:40:10.335355 2634693 round_trippers.go:580]     Content-Type: text/plain; charset=utf-8
+I0814 22:40:10.335366 2634693 round_trippers.go:580]     ...
+# GET /openapi/v3 返回体
+I0814 22:40:10.336639 2634693 request.go:1212] Response Body: {"paths":{"apis/apps":{"serverRelativeURL":"/openapi/v3/apis/apps?hash=xxxx"},"apis/apps/v1":{"serverRelativeURL":"/openapi/v3/apis/apps/v1?hash=xxx"}}}
+I0814 22:40:10.337349 2634693 round_trippers.go:466] curl -v -XGET  -H "Accept: application/json" -H "User-Agent: kubectl/v1.30.1 (linux/amd64) kubernetes/6911225" 'https://10.37.43.62:6443/openapi/v3/apis/apps/v1?hash=xxx&timeout=32s'
+# 4. 请求 kube-apiserver 的 GET /openapi/v3/apis/apps/v1 接口，获取 Kubernetes 中特定 API 组（在这个例子中是 apps 组）的 OpenAPI 规范。这一规范详细描述了该 API 组中的资源（例如 ReplicaSet、Deployment 等）的结构、操作和约束。
+I0814 22:40:10.341199 2634693 round_trippers.go:553] GET https://10.37.43.62:6443/openapi/v3/apis/apps/v1?hash=xxx&timeout=32s 200 OK in 3 milliseconds
+I0814 22:40:10.341233 2634693 round_trippers.go:570] HTTP Statistics: DNSLookup 0 ms Dial 0 ms TLSHandshake 0 ms Duration 3 ms
+# GET /openapi/v3/apis/apps/v1 接口返回头
+I0814 22:40:10.341241 2634693 round_trippers.go:577] Response Headers:
+I0814 22:40:10.341250 2634693 round_trippers.go:580]     Last-Modified: Sat, 25 May 2024 09:27:53 GMT
+I0814 22:40:10.341309 2634693 round_trippers.go:580]     ...
+# GET /openapi/v3/apis/apps/v1 返回体，指定了 apiVersion = apps/v1， kind = ReplicaSet 的 OpenAPI 3.0 接口定义
+I0814 22:40:10.346282 2634693 request.go:1212] Response Body: {"openapi":"3.0.0", ...}
+# 5. 请求 POST /apis/apps/v1/namespaces/default/replicasets 接口，创建 ReplicaSet 资源
+I0814 22:40:10.375058 2634693 request.go:1212] Request Body: {"apiVersion":"apps/v1","kind":"ReplicaSet","metadata":{"name":"my-replicaset","namespace":"default"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"my-app"}},"template":{"metadata":{"labels":{"app":"my-app"}},"spec":{"containers":[{"image":"nginx","name":"my-container","ports":[{"containerPort":80}]}]}}}}
+# 6. 打印请求 POST /apis/apps/v1/namespaces/default/replicasets 接口的 curl 命令
+I0814 22:40:10.375203 2634693 round_trippers.go:466] curl -v -XPOST  -H "Accept: application/json" -H "Content-Type: application/json" -H "User-Agent: kubectl/v1.30.1 (linux/amd64) kubernetes/6911225" 'https://10.37.43.62:6443/apis/apps/v1/namespaces/default/replicasets?fieldManager=kubectl-create&fieldValidation=Strict'
+# 7. 请求 POST /apis/apps/v1/namespaces/default/replicasets 接口创建 ReplicaSet 资源
+I0814 22:40:10.382675 2634693 round_trippers.go:553] POST https://10.37.43.62:6443/apis/apps/v1/namespaces/default/replicasets?fieldManager=kubectl-create&fieldValidation=Strict 201 Created in 7 milliseconds
+# 返回头
+I0814 22:40:10.382737 2634693 round_trippers.go:577] Response Headers:
+I0814 22:40:10.382751 2634693 round_trippers.go:580]     Audit-Id: d7974927-8e25-476a-a9b1-4b39e6d0a0ad
+I0814 22:40:10.382758 2634693 round_trippers.go:580]     ...
+# 返回体
+I0814 22:40:10.382894 2634693 request.go:1212] Response Body: {"kind":"ReplicaSet","apiVersion":"apps/v1","metadata":{"name":"my-replicaset","namespace":"default","uid":"b22383e9-e414-423c-a03e-0633a2b1484a","resourceVersion":"42746512","generation":1,"creationTimestamp":"2024-08-14T14:40:10Z"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"my-app"}},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"my-app"}},"spec":{"containers":[{"name":"my-container","image":"nginx","ports":[{"containerPort":80,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","securityContext":{},"schedulerName":"default-scheduler"}}},"status":{"replicas":0}}
