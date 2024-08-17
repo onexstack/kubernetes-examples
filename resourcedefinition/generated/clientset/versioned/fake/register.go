@@ -8,7 +8,7 @@
 package fake
 
 import (
-	v1beta1internalversion "github.com/superproj/k8sdemo/resource-definition/apps/v1beta1"
+	appsv1beta1 "github.com/superproj/k8sdemo/resourcedefinition/apps/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -20,7 +20,7 @@ var scheme = runtime.NewScheme()
 var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
-	v1beta1internalversion.AddToScheme,
+	appsv1beta1.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition
