@@ -1,0 +1,32 @@
+apiVersion: v1  
+kind: Service  
+metadata:  
+  name: aggregated-service  
+  namespace: default  
+spec:  
+  ports:  
+  - port: 443
+    targetPort: 443
+  selector:  
+    app: aggregated-server
+---  
+apiVersion: apps/v1  
+kind: Deployment  
+metadata:  
+  name: aggregated-server
+  namespace: default  
+spec:  
+  replicas: 1  
+  selector:  
+    matchLabels:  
+      app: aggregated-server
+  template:  
+    metadata:  
+      labels:  
+        app: aggregated-server
+    spec:  
+      containers:  
+      - name: aggregated-server
+        image: ccr.ccs.tencentyun.com/superproj/aggregated-apiserver:v0.0.1  # 替换为您的 Docker 镜像  
+        ports:  
+        - containerPort: 443
