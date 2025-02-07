@@ -11,7 +11,7 @@ type CustomResource struct {
 	Message string `json:"message"`
 }
 
-// 嵌入的证书和私钥  
+// 嵌入的证书和私钥
 const serverCert = `-----BEGIN CERTIFICATE-----
 MIIFazCCA1OgAwIBAgIUUSWa2AJ2fboO6VNYOhGadPCP9DAwDQYJKoZIhvcNAQEL
 BQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM
@@ -122,7 +122,7 @@ func main() {
 		TLSConfig: tlsConfig,
 	}
 
-	// 启动 HTTPS 服务器  
+	// 启动 HTTPS 服务器
 	log.Println("Starting HTTPS server on port 8443...")
 	if err := srv.ListenAndServeTLS("", ""); err != nil {
 		log.Fatalf("ListenAndServeTLS failed: %v", err)

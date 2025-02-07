@@ -58,6 +58,6 @@ func main() {
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM) // 添加需要监听的信号
 	<-signalChan                                               // 阻塞直到接收到信号
 
-	glog.Infof("Got OS shutdown signal, shutting down webhook server gracefully...") // 日志记录关闭信号  
-	whsvr.server.Shutdown(context.Background())                                      // 优雅地关停 HTTP 服务器  
+	glog.Infof("Got OS shutdown signal, shutting down webhook server gracefully...") // 日志记录关闭信号
+	whsvr.server.Shutdown(context.Background())                                      // 优雅地关停 HTTP 服务器
 }

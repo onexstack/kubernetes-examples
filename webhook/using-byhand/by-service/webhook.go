@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json" // 用于处理 JSON 格式的编码和解码  
+	"encoding/json" // 用于处理 JSON 格式的编码和解码
 	"fmt"
-	"io/ioutil" // 用于读取输入输出流  
-	"net/http"  // HTTP 客户端和服务器库  
+	"io/ioutil" // 用于读取输入输出流
+	"net/http"  // HTTP 客户端和服务器库
 	"strings"
 
 	"github.com/golang/glog"                                      // 日志库

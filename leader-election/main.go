@@ -1,17 +1,5 @@
 /*
-Copyright 2018 The Kubernetes Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+该示例来自于：https://github.com/kubernetes/client-go/blob/master/examples/leader-election/main.go
 */
 
 package main
@@ -35,6 +23,7 @@ import (
 )
 
 func buildConfig(kubeconfig string) (*rest.Config, error) {
+	// 如果指定了 kubeconfig，则使用指定的 kubeconfg 构建客户端
 	if kubeconfig != "" {
 		cfg, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 		if err != nil {
@@ -43,6 +32,7 @@ func buildConfig(kubeconfig string) (*rest.Config, error) {
 		return cfg, nil
 	}
 
+	// 如果程序部署在 Kubernetes 集群内，则使用 In-Cluster Config
 	cfg, err := rest.InClusterConfig()
 	if err != nil {
 		return nil, err
@@ -80,8 +70,10 @@ func main() {
 	if err != nil {
 		klog.Fatal(err)
 	}
+	// 创建 Kubernetes 客户端实例，用来同 kube-apiserver 进行交互
 	client := clientset.NewForConfigOrDie(config)
 
+	// 执行程序的主业务逻辑
 	run := func(ctx context.Context) {
 		// complete your controller loop here
 		klog.Info("Controller loop...")
@@ -97,6 +89,7 @@ func main() {
 	// listen for interrupts or the Linux SIGTERM signal and cancel
 	// our context, which the leader election code will observe and
 	// step down
+	// 优雅关停实现
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
 	go func() {
@@ -107,6 +100,7 @@ func main() {
 
 	// we use the Lease lock type since edits to Leases are less common
 	// and fewer objects in the cluster watch "all Leases".
+	// 指定锁的资源对象，这里使用了 Lease 资源，还支持 configmap，endpoint，或者 multilock（即多种配合使用）
 	lock := &resourcelock.LeaseLock{
 		LeaseMeta: metav1.ObjectMeta{
 			Name:      leaseLockName,
@@ -119,6 +113,7 @@ func main() {
 	}
 
 	// start the leader election code loop
+	// 开始 Leader Election 循环
 	leaderelection.RunOrDie(ctx, leaderelection.LeaderElectionConfig{
 		Lock: lock,
 		// IMPORTANT: you MUST ensure that any code you have that
@@ -128,22 +123,25 @@ func main() {
 		// get elected before your background loop finished, violating
 		// the stated goal of the lease.
 		ReleaseOnCancel: true,
-		LeaseDuration:   60 * time.Second,
-		RenewDeadline:   15 * time.Second,
-		RetryPeriod:     5 * time.Second,
+		LeaseDuration:   60 * time.Second, // 租约持续时间
+		RenewDeadline:   15 * time.Second, // 租约过期时间
+		RetryPeriod:     5 * time.Second,  // 候选节点重试时间
 		Callbacks: leaderelection.LeaderCallbacks{
 			OnStartedLeading: func(ctx context.Context) {
 				// we're notified when we start - this is where you would
 				// usually put your code
+				// 变为 Leader 后需要执行的业务代码
 				run(ctx)
 			},
 			OnStoppedLeading: func() {
 				// we can do cleanup here
+				// 打印日志，并退出进程
 				klog.Infof("leader lost: %s", id)
 				os.Exit(0)
 			},
 			OnNewLeader: func(identity string) {
 				// we're notified when new leader elected
+				// 当产生新的 Leader 后执行的业务逻辑
 				if identity == id {
 					// I just got the lock
 					return

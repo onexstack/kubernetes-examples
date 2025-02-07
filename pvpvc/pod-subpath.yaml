@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-subpath-zltest
+spec:
+    containers:
+    - name: ubuntu-subpath-container
+      image: ubuntu
+      volumeMounts:
+      - mountPath: /var/lib/ubuntu            # 容器1的挂载目录
+        name: subpath-vol
+        subPath: ubuntutest                   # 宿主机volume5的子目录1
+    - name: nginx-subpath-container
+      image: nginx
+      volumeMounts:
+      - mountPath: /var/www/nginx             # 容器2的挂载目录
+        name: subpath-vol
+        subPath: nginxtest                   # 宿主机volume5的子目录2 
+    volumes:
+    - name: subpath-vol
+      persistentVolumeClaim:
+        claimName: pvc-subpath               # PVC的名字

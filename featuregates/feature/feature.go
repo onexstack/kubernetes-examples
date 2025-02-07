@@ -5,7 +5,7 @@ import (
 	"k8s.io/component-base/featuregate"
 )
 
-// 定义新的功能门控  
+// 定义新的功能门控
 const MyNewFeature featuregate.Feature = "MyNewFeature"
 
 func init() {
@@ -16,6 +16,9 @@ func init() {
 // defaultFeatureGates consists of all known specific feature keys.
 // To add a new feature, define a key for it above and add it here.
 var defaultFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
-	// Every feature should be initiated here:
+	// owner: @colin404
+	// Deprecated: v1.31
+	//
+	// An example feature gate.
 	MyNewFeature: {Default: false, PreRelease: featuregate.Alpha},
 }

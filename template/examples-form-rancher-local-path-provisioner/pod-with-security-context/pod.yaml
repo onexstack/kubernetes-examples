@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: local-path-test
+  labels:
+    app.kubernetes.io/name: local-path-test
+spec:
+  containers:
+    - name: test
+      # Jenkins image used for illustration purposes because it has a user
+      # with uid=1000 and gid=1000 that matches the specified security context
+      image: jenkins/jenkins
+      command:
+        - /config/test.sh
+      volumeMounts:
+        - name: test
+          mountPath: /test
+        - name: config
+          mountPath: /config
+  restartPolicy: Never
+  securityContext:
+    fsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+  terminationGracePeriodSeconds: 0
+  volumes:
+    - name: test
+      persistentVolumeClaim:
+        claimName: local-path-pvc
+    - name: config
+      configMap:
+        name: local-path-test
+        defaultMode: 0555
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: local-path-test
+  labels:
+    app.kubernetes.io/name: local-path-test
+data:
+  test.sh: |
+    #!/bin/sh
+    id
+    ls -al /test && \
+    echo 'Hello from local-path-test' && \
+    cp /config/text.txt /test/test.txt && \
+    touch /test/foo && \
+    ls -al /test
+  text.txt: |
+    some test content

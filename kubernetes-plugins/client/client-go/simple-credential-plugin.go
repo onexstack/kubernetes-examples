@@ -11,7 +11,7 @@ type Credential struct {
 }
 
 func main() {
-	// 模拟获取一个令牌  
+	// 模拟获取一个令牌
 	token := "your-static-token"
 
 	// 创建凭证响应
@@ -24,6 +24,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// 输出 JSON 响应  
+	// 输出 JSON 响应
 	fmt.Println(string(response))
 }
